@@ -1,0 +1,472 @@
+/* 操作切换 */
+.operation-switch {
+  display: flex;
+  gap: 12px;
+  margin: 20px 0;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 8px rgba(30, 144, 255, 0.08);
+  width: fit-content;
+}
+
+.switch-btn {
+  padding: 10px 24px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: #64748b;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.switch-btn:hover {
+  background: linear-gradient(135deg, rgba(30, 144, 255, 0.08) 0%, rgba(30, 144, 255, 0.12) 100%);
+  color: #1e90ff;
+}
+
+.switch-btn.active {
+  background: var(--gradient-primary);
+  color: white;
+  box-shadow: 
+    0 2px 6px rgba(30, 144, 255, 0.25),
+    0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.switch-btn.active:hover {
+  background: var(--gradient-primary-hover);
+  box-shadow: 
+    0 4px 12px rgba(30, 144, 255, 0.35),
+    0 2px 6px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.operation-content {
+  display: none;
+}
+
+.operation-content.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+/* 自动化任务列表 */
+.auto-tasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.auto-task-card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  border-left: 4px solid #3b82f6;
+  box-shadow: 
+    0 2px 8px rgba(30, 144, 255, 0.08),
+    0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1px solid #d4e7ff;
+  border-left: 4px solid #3b82f6;
+  transition: 
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.2s ease;
+}
+
+.auto-task-card:hover {
+  box-shadow: 
+    0 6px 16px rgba(30, 144, 255, 0.15),
+    0 2px 6px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+  border-color: #b8d9ff;
+}
+
+.auto-task-card.running {
+  border-left-color: #10b981;
+}
+
+.auto-task-card.stopped {
+  border-left-color: #ef4444;
+}
+
+.auto-task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.auto-task-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.auto-task-meta {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.auto-task-meta-item {
+  display: flex;
+  gap: 8px;
+}
+
+.auto-task-meta-label {
+  color: #9ca3af;
+  flex-shrink: 0;
+  min-width: fit-content;
+}
+
+.auto-task-meta-value {
+  color: #374151;
+  word-break: break-all;
+}
+
+.auto-task-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 12px;
+  padding: 16px 12px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 12px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(30, 144, 255, 0.08);
+}
+
+.auto-task-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 8px;
+  background: white;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(30, 144, 255, 0.06);
+}
+
+.auto-task-stat:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(30, 144, 255, 0.12);
+  border-color: rgba(30, 144, 255, 0.2);
+}
+
+.auto-task-stat-label {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.auto-task-stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1e3a8a;
+  line-height: 1;
+}
+
+.auto-task-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.auto-task-actions button {
+  padding: 6px 14px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* 执行历史样式 */
+.auto-task-executions {
+  margin-top: 16px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 12px;
+}
+
+.auto-task-executions-toggle {
+  width: 100%;
+  padding: 10px 12px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  color: #4b5563;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.auto-task-executions-toggle:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.auto-task-executions-toggle .toggle-icon {
+  transition: transform 0.2s;
+  font-size: 10px;
+  color: #9ca3af;
+}
+
+.auto-task-executions-toggle .toggle-icon.expanded {
+  transform: rotate(90deg);
+}
+
+.auto-task-executions-list {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  margin-top: 12px;
+}
+
+.auto-task-executions-list.expanded {
+  max-height: 1000px;
+  transition: max-height 0.5s ease-in;
+}
+
+.execution-item {
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  position: relative;
+  transition: 
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.2s ease;
+}
+
+.execution-item:hover {
+  box-shadow: 
+    0 6px 16px rgba(30, 144, 255, 0.15),
+    0 2px 6px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+  border-color: #b8d9ff;
+}
+
+.execution-item.running {
+  border-left: 3px solid #3b82f6;
+}
+
+.execution-item.completed {
+  border-left: 3px solid #10b981;
+}
+
+.execution-item.failed {
+  border-left: 3px solid #ef4444;
+}
+
+.execution-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.execution-item-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.execution-item .icon-delete-btn {
+  margin-left: 8px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.execution-status-badge {
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.execution-status-badge.running {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.execution-status-badge.completed {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.execution-status-badge.failed {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.execution-time {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.execution-item-stats {
+  display: flex;
+  gap: 16px;
+  font-size: 14px;
+  color: #6b7280;
+  flex: 1;
+}
+
+.execution-stat b {
+  color: #1f2937;
+  font-weight: 600;
+}
+
+/* 编辑卡片展开动画 */
+.auto-task-card-container {
+  position: relative;
+}
+
+.auto-task-edit-wrapper {
+  max-height: 0;
+  overflow: hidden;
+  margin: 16px 20px 0 20px;
+  opacity: 0;
+  transform: translateY(-8px) scale(0.98);
+  /* 收起动画：先淡出和缩小，再折叠高度 */
+  transition: 
+    opacity 0.25s cubic-bezier(0.4, 0, 1, 1),
+    transform 0.3s cubic-bezier(0.4, 0, 1, 1),
+    max-height 0.35s cubic-bezier(0.4, 0, 0.6, 1) 0.1s;
+}
+
+.auto-task-edit-wrapper.expanded {
+  max-height: 2500px;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  /* 展开动画：先展开高度，再淡入和放大 */
+  transition: 
+    max-height 0.45s cubic-bezier(0.2, 0, 0.2, 1),
+    opacity 0.35s cubic-bezier(0, 0, 0.2, 1) 0.15s,
+    transform 0.4s cubic-bezier(0, 0, 0.2, 1) 0.12s;
+}
+
+.auto-task-edit-wrapper .forward-form-card {
+  margin-top: 0;
+  margin-bottom: 0;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.06),
+    0 2px 8px rgba(30, 144, 255, 0.08);
+  background: linear-gradient(to bottom, #fafcff 0%, #ffffff 100%);
+  transition: box-shadow 0.3s ease;
+}
+
+.auto-task-edit-wrapper.expanded .forward-form-card {
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.06),
+    0 4px 12px rgba(30, 144, 255, 0.12);
+}
+
+/* 执行历史分页 */
+.executions-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  margin-top: 12px;
+}
+
+.executions-pagination .pagination-arrow-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 32px;
+  padding: 0;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  color: #3b82f6;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.executions-pagination .pagination-arrow-btn:hover:not(.disabled) {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #2563eb;
+}
+
+.executions-pagination .pagination-arrow-btn.disabled {
+  background: #f9fafb;
+  border-color: #e5e7eb;
+  color: #d1d5db;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.executions-pagination .pagination-page-info {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+  min-width: 140px;
+  text-align: center;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .grid-2,
+  .log-filters {
+    grid-template-columns: 1fr;
+  }
+  
+  .log-stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .tab-nav {
+    flex-direction: column;
+  }
+  
+  .container {
+    padding: 16px;
+  }
+  
+  .main-card {
+    padding: 20px;
+  }
+  
+  .operation-switch {
+    width: 100%;
+  }
+  
+  .switch-btn {
+    flex: 1;
+  }
+  
+  .auto-task-meta {
+    grid-template-columns: 1fr;
+  }
+  
+  .auto-task-edit-wrapper {
+    margin: 16px 10px 0 10px;
+  }
+}
+

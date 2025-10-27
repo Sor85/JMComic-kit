@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# 运行时数据（包含敏感信息）
+data/
+download/
+export/
+
+# 临时文件
+*.log
+*.tmp
+.temp_*
+*.pyc
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 项目特定
+*.7z
+
+# 二进制文件和编译产物
+bin/
+*.exe
+jmcomic-downloader/target/
+jmcomic-downloader/Cargo.lock
+

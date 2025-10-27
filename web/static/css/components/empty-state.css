@@ -1,0 +1,9 @@
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  color: #64748b;
+  padding: 40px 20px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+

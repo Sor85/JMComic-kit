@@ -1,0 +1,35 @@
+# 本地下载配置文件
+
+dir_rule:
+  base_dir: ${DOWNLOAD_DIR}  # 下载目录
+  rule: Bd_Aauthoroname_Pindextitle  # 目录层级规则（Bd 必须在前，_ 表示目录分隔）
+
+client:
+  impl: api  # 使用api可免登录下载本子
+  domain:
+    html: [ jmcomic1.me, jmcomic.me ]
+
+# 插件配置
+plugins:
+  after_init:
+    - plugin: usage_log  # 实时打印硬件占用率
+      kwargs:
+        interval: 0.5
+        enable_warning: false
+
+    - plugin: client_proxy  # 提高移动端的请求效率
+      kwargs:
+        proxy_client_key: photo_concurrent_fetcher_proxy
+        whitelist: [ api, ]
+
+    - plugin: advanced_retry  # 高级重试机制
+      kwargs:
+        retry_config:
+          retry_rounds: 3              # 最多轮询3轮所有域名
+          retry_domain_max_times: 5    # 单个域名失败5次就放弃
+
+    - plugin: login  # 登录插件（可选，如果不需要登录可以注释掉）
+      kwargs:
+        username: ${JM_USERNAME}
+        password: ${JM_PASSWORD}
+

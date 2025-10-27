@@ -1,0 +1,28 @@
+# 本地运行收藏夹导出配置文件
+# 
+# 使用说明：
+# 1. 填写下面的账号密码信息
+# 2. 运行 local_export_favorites.py 脚本即可
+
+client:
+  impl: api
+  domain:
+    html: [ jmcomic1.me, jmcomic.me ]
+
+# 插件配置
+plugins:
+  main:
+    - plugin: login # 登录插件
+      kwargs:
+        username: ${JM_USERNAME}  # 在这里填写你的禁漫账号，或者在脚本中配置
+        password: ${JM_PASSWORD}  # 在这里填写你的禁漫密码，或者在脚本中配置
+
+    - plugin: favorite_folder_export  # 导出收藏夹插件
+      log: true  # 启用日志
+      kwargs:
+        save_dir: ./export/  # 导出的CSV文件保存目录
+        zip_enable: true  # 是否压缩为zip文件
+        zip_filepath: ./export_favorites.7z  # 压缩文件路径
+        zip_password: ${ZIP_PASSWORD}  # 压缩文件密码，可选
+        delete_original_file: false  # 压缩后是否删除原文件
+

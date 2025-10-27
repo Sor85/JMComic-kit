@@ -1,0 +1,23 @@
+[package]
+name = "jmcomic-downloader"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1.35", features = ["full"] }
+reqwest = { version = "0.11", features = ["stream", "rustls-tls"], default-features = false }
+clap = { version = "4.4", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+anyhow = "1.0"
+futures = "0.3"
+tokio-util = { version = "0.7", features = ["io"] }
+indicatif = "0.17"
+image = "0.24"
+md5 = "0.7"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true

@@ -1,0 +1,319 @@
+/* 任务列表 */
+.tasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0;
+  overflow-y: visible;
+  margin-bottom: 16px;
+}
+
+/* 任务项 - 紧凑卡片样式 */
+.task-item {
+  background: #ffffff;
+  border: 1px solid #d4e7ff;
+  border-radius: 8px;
+  padding: 0;
+  cursor: pointer;
+  transition: 
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 1px 3px rgba(30, 144, 255, 0.06),
+    0 1px 2px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.task-item:hover {
+  background: #fafcff;
+  box-shadow: 
+    0 6px 16px rgba(30, 144, 255, 0.15),
+    0 2px 6px rgba(0, 0, 0, 0.08);
+  border-color: #b8d9ff;
+  transform: translateY(-2px);
+}
+
+.task-item.pending { border-left: 3px solid #f59e0b; }
+.task-item.running { border-left: 3px solid #3b82f6; }
+.task-item.completed { border-left: 3px solid #22c55e; }
+.task-item.failed { border-left: 3px solid #ef4444; }
+
+/* 任务卡片头部（紧凑布局） */
+.task-item-header {
+  padding: 14px 16px;
+  display: grid;
+  grid-template-columns: 12px 80px 100px 140px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  min-height: 50px;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.task-item-header:hover {
+  background-color: rgba(30, 144, 255, 0.03);
+}
+
+.task-item-header:active {
+  background-color: rgba(30, 144, 255, 0.05);
+}
+
+.task-expand-icon {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 10px;
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
+.task-expand-icon.expanded {
+  transform: rotate(90deg);
+  color: #1e90ff;
+}
+
+/* 任务详情区域（展开内容） */
+.task-detail-content {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-10px);
+  border-top: 1px solid transparent;
+  transition: 
+    max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.task-detail-content.expanded {
+  max-height: 2000px;
+  opacity: 1;
+  transform: translateY(0);
+  border-top-color: #f1f5f9;
+  overflow: hidden;
+  transition: 
+    max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.1s,
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.1s,
+    border-top-color 0.2s ease;
+}
+
+.task-detail-inner {
+  padding: 16px;
+  padding-bottom: 20px;
+  background: #f9fafb;
+}
+
+.task-detail-section {
+  margin-bottom: 16px;
+}
+
+.task-detail-section:last-child {
+  margin-bottom: 8px;
+}
+
+.task-detail-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.task-detail-logs {
+  font-family: ui-monospace, monospace;
+  font-size: 14px;
+  line-height: 1.8;
+  color: #4b5563;
+  background: #ffffff;
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid #e5e7eb;
+  max-height: 500px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-bottom: 4px;
+  transition: border-color 0.3s ease;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+.task-detail-logs:hover {
+  border-color: #cbd5e1;
+}
+
+.task-detail-logs::-webkit-scrollbar {
+  width: 8px;
+}
+
+.task-detail-logs::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.task-detail-logs::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.task-detail-logs::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.task-detail-log-line {
+  margin-bottom: 4px;
+  padding: 4px 0;
+  word-wrap: break-word;
+  word-break: break-all;
+  color: #1f2937;
+  font-size: 13px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.task-detail-info {
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+.task-detail-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 8px 16px;
+}
+
+.task-detail-info-item {
+  margin-bottom: 0;
+  padding: 4px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.task-status-badge {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  text-align: center;
+  white-space: nowrap;
+  min-width: 60px;
+}
+
+.task-status-badge.running {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.task-status-badge.completed {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.task-status-badge.failed {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.task-status-badge.pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.task-id {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1e90ff;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  background: rgba(30, 144, 255, 0.08);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.task-time-compact {
+  font-size: 13px;
+  color: #64748b;
+  font-family: ui-monospace, monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.task-summary {
+  font-size: 14px;
+  color: #334155;
+  line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.task-actions-compact {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.task-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.task-content {
+  color: #374151;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.task-actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+}
+
+.task-actions button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+@media (max-width: 900px) {
+  .task-item-header {
+    grid-template-columns: 12px 80px 100px minmax(0, 1fr) auto;
+    gap: 8px;
+  }
+  
+  .task-time-compact {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .task-item-header {
+    grid-template-columns: 12px minmax(0, 1fr) auto;
+    gap: 8px;
+  }
+  
+  .task-status-badge,
+  .task-id {
+    display: none;
+  }
+}
+

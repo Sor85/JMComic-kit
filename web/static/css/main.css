@@ -1,0 +1,25 @@
+/**
+ * JMComic-kit 主样式文件
+ * 按模块化方式组织，按依赖顺序导入
+ */
+
+/* ========== 基础样式 ========== */
+@import './base/variables.css';
+@import './base/reset.css';
+@import './base/layout.css';
+
+/* ========== 组件样式 ========== */
+@import './components/tabs.css';
+@import './components/cards.css';
+@import './components/forms.css';
+@import './components/buttons.css';
+@import './components/loading.css';
+@import './components/modals.css';
+@import './components/custom-select.css';
+@import './components/empty-state.css';
+
+/* ========== 页面样式 ========== */
+@import './pages/logs.css';
+@import './pages/tasks.css';
+@import './pages/automation.css';
+

@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>禁漫工具箱</title>
+  <link rel="icon" type="image/png" href="/static/favicon.png">
+  <link rel="stylesheet" href="/static/css/main.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>禁漫工具箱 <span class="version-badge">ver.1.0.1</span></h1>
+      <p>本地运行版本，支持下载、导出和自动化同步</p>
+    </header>
+
+    <!-- Tab 导航 -->
+      <nav class="tab-nav">
+        <button class="tab-btn active" data-tab="manual">
+          <span class="tab-icon">📥</span>
+          手动下载
+        </button>
+        <button class="tab-btn" data-tab="automation">
+          <span class="tab-icon">🤖</span>
+          自动化
+        </button>
+      </nav>
+
+    <main class="main-card">
+      <!-- 手动操作页面 -->
+        <div class="tab-content active" data-content="manual">
+          <section class="config-section">
+            <div class="config-header">
+              <h2>手动下载</h2>
+            </div>
+            <p class="muted">手动下载本子或导出收藏夹数据。</p>
+          
+          <!-- 切换按钮 -->
+          <div class="operation-switch">
+            <button class="switch-btn active" data-operation="download">下载本子</button>
+            <button class="switch-btn" data-operation="export">导出收藏夹</button>
+          </div>
+          
+          <!-- 下载本子表单 -->
+          <div class="operation-content active" data-operation-content="download">
+            <h3 class="sub-title">下载配置</h3>
+            <p class="sub-muted">填写要下载的本子ID，支持批量下载。</p>
+          
+          <form id="downloadForm" class="form">
+            <div class="input-group">
+              <label for="csvFileSelect">从收藏夹导入 <span class="optional">(可选)</span></label>
+              <div style="display: flex; gap: 8px; align-items: stretch;">
+                <select id="csvFileSelect" style="flex: 1;">
+                  <option value="">-- 选择CSV文件 --</option>
+                </select>
+                <button type="button" id="btnImportCsv" class="btn" style="white-space: nowrap;">导入</button>
+              </div>
+              <small class="input-hint">选择之前导出的收藏夹CSV文件，导入后会自动填充到下方的本子ID输入框</small>
+            </div>
+
+            <div class="input-group">
+              <label for="albumIds">本子ID <span class="optional">(一行一个，支持JM前缀)</span></label>
+              <textarea id="albumIds" rows="5" placeholder="422866&#10;JM123456&#10;789012"></textarea>
+            </div>
+
+            <div class="input-group">
+              <label for="photoIds">章节ID <span class="optional">(可选)</span></label>
+              <textarea id="photoIds" rows="3" placeholder="可选，留空表示不下载单独章节"></textarea>
+            </div>
+
+            <div class="grid-2">
+              <div class="input-group">
+                <label for="downloadDir">下载目录</label>
+                <input type="text" id="downloadDir" value="./download/" />
+              </div>
+
+              <div class="input-group">
+                <label for="dirRule">目录层级规则</label>
+                <input type="text" id="dirRule" value="Aauthoroname/Pindextitle" />
+                <small class="input-hint">用 / 分隔目录层级。常用字段: Aauthoroname([作者]标题), Atitle(标题), Aid(本子ID), Pindextitle(第X話 标题), Pindex(章节)</small>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="input-group">
+                <label for="clientImpl">客户端类型</label>
+                <select id="clientImpl">
+                  <option value="api">API (推荐，快速)</option>
+                  <option value="html">HTML (慢但稳定)</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label for="imageSuffix">图片格式 <span class="optional">(可选)</span></label>
+                <select id="imageSuffix">
+                  <option value="">不转换</option>
+                  <option value=".jpg">JPG</option>
+                  <option value=".png">PNG</option>
+                  <option value=".webp">WebP</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="input-group">
+                <label for="downloadSpeed">下载速度限制 <span class="optional">(可选)</span></label>
+                <input type="text" id="downloadSpeed" placeholder="例如: 10mb 或 1024kb，留空不限速" />
+                <small class="input-hint">支持 mb/kb 单位，如 10mb、512kb</small>
+              </div>
+            </div>
+
+            <!-- 压缩配置 -->
+            <div class="input-group">
+              <label>
+                <input type="checkbox" id="enableCompression" />
+                下载完成后自动压缩
+              </label>
+            </div>
+
+            <div id="compressionConfig" style="display: none; padding: 16px; background: #f8fafc; border-radius: 8px; margin-top: 8px;">
+              <div class="grid-2">
+                <div class="input-group">
+                  <label for="compressionFormat">压缩格式</label>
+                  <select id="compressionFormat">
+                    <option value="zip">ZIP</option>
+                    <option value="7z">7z</option>
+                  </select>
+                </div>
+                
+                <div class="input-group">
+                  <label for="compressionLevel">压缩级别</label>
+                  <select id="compressionLevel">
+                    <option value="album">整本压缩</option>
+                    <option value="photo">分章压缩</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div class="grid-2" style="margin-top: 16px;">
+                <div class="input-group">
+                  <label for="compressionPassword">压缩密码 <span class="optional">(可选)</span></label>
+                  <input type="password" id="compressionPassword" placeholder="留空表示不加密" />
+                </div>
+                
+                <div class="input-group" style="margin-top: 28px;">
+                  <label>
+                    <input type="checkbox" id="deleteAfterCompress" />
+                    压缩后删除原文件
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- PDF 生成配置 -->
+            <div class="input-group">
+              <label>
+                <input type="checkbox" id="enablePdf" />
+                下载完成后自动生成PDF
+              </label>
+            </div>
+
+            <div id="pdfConfig" style="display: none; padding: 16px; background: #f8fafc; border-radius: 8px; margin-top: 8px;">
+              <div class="grid-2">
+                <div class="input-group">
+                  <label for="pdfLevel">PDF级别</label>
+                  <select id="pdfLevel">
+                    <option value="album">整本PDF</option>
+                    <option value="photo">分章PDF</option>
+                  </select>
+                </div>
+                
+                <div class="input-group">
+                  <label for="pdfPassword">PDF密码 <span class="optional">(可选)</span></label>
+                  <input type="password" id="pdfPassword" placeholder="留空表示不加密" />
+                </div>
+              </div>
+              
+              <div class="input-group" style="margin-top: 16px;">
+                <label>
+                  <input type="checkbox" id="deleteAfterPdf" />
+                  生成PDF后删除原图片
+                </label>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="input-group">
+                <label for="dlUsername">禁漫账号 <span class="optional">(可选)</span></label>
+                <input type="text" id="dlUsername" placeholder="不登录也可下载大部分本子" />
+              </div>
+
+              <div class="input-group">
+                <label for="dlPassword">禁漫密码 <span class="optional">(可选)</span></label>
+                <div style="position: relative; width: 100%;">
+                  <input type="password" id="dlPassword" style="padding-right: 40px; width: 100%;" />
+                  <button type="button" id="toggleDlPwd" class="icon-btn" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); padding: 4px 6px; border: none; background: transparent; cursor: pointer; color: #64748b; transition: color 0.2s; display: flex; align-items: center; justify-content: center;" title="显示/隐藏密码">
+                    <svg id="toggleDlPwdIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="btn-group">
+              <button type="submit" class="btn btn-primary">开始下载</button>
+              <button type="button" class="btn" id="btnResetDownload">重置</button>
+            </div>
+          </form>
+          </div>
+          
+          <!-- 导出收藏夹表单 -->
+          <div class="operation-content" data-operation-content="export">
+            <h3 class="sub-title">导出配置</h3>
+            <p class="sub-muted">导出你的禁漫收藏夹数据为CSV文件。</p>
+          
+          <form id="exportForm" class="form">
+            <div class="grid-2">
+              <div class="input-group">
+                <label for="expUsername">禁漫账号</label>
+                <input type="text" id="expUsername" required />
+              </div>
+
+              <div class="input-group">
+                <label for="expPassword">禁漫密码</label>
+                <div style="position: relative; width: 100%;">
+                  <input type="password" id="expPassword" required style="padding-right: 40px; width: 100%;" />
+                  <button type="button" id="toggleExpPwd" class="icon-btn" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); padding: 4px 6px; border: none; background: transparent; cursor: pointer; color: #64748b; transition: color 0.2s; display: flex; align-items: center; justify-content: center;" title="显示/隐藏密码">
+                    <svg id="toggleExpPwdIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="input-group">
+                <label for="saveDir">保存目录</label>
+                <input type="text" id="saveDir" value="./export/" />
+              </div>
+
+              <div class="input-group">
+                <label for="zipEnable">启用压缩</label>
+                <select id="zipEnable">
+                  <option value="true">是</option>
+                  <option value="false" selected>否</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="input-group">
+                <label for="zipPassword">压缩密码 <span class="optional">(可选)</span></label>
+                <div style="position: relative; width: 100%;">
+                  <input type="password" id="zipPassword" placeholder="留空表示不设置密码" style="padding-right: 40px; width: 100%;" />
+                  <button type="button" id="toggleZipPwd" class="icon-btn" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); padding: 4px 6px; border: none; background: transparent; cursor: pointer; color: #64748b; transition: color 0.2s; display: flex; align-items: center; justify-content: center;" title="显示/隐藏密码">
+                    <svg id="toggleZipPwdIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="btn-group">
+              <button type="submit" class="btn btn-primary">开始导出</button>
+              <button type="button" class="btn" id="btnResetExport">重置</button>
+            </div>
+          </form>
+          </div>
+        </section>
+
+        <!-- 手动下载日志 -->
+        <section class="test-section" style="margin-top: 32px;">
+          <div class="log-main-card">
+            <div class="log-main-header">
+              <h2>任务日志</h2>
+              <p class="muted" style="font-size: 13px; margin-top: 6px;">显示最近的本子下载记录，点击查看详情</p>
+            </div>
+
+            <div class="log-control-card">
+              <div class="log-control-header">
+                <h3>执行日志</h3>
+                <button class="icon-refresh-btn" id="refreshManualLogs" title="刷新">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+                  </svg>
+                </button>
+              </div>
+
+              <!-- 统计信息 -->
+              <div class="log-stats">
+                <div class="stat-card">
+                  <div class="stat-label">全部任务</div>
+                  <div class="stat-value" id="manualStatTotal">0</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-label">运行中</div>
+                  <div class="stat-value stat-running" id="manualStatInfo">0</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-label">已完成</div>
+                  <div class="stat-value stat-success" id="manualStatSuccess">0</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-label">失败</div>
+                  <div class="stat-value stat-error" id="manualStatError">0</div>
+                </div>
+              </div>
+
+              <!-- 筛选器 -->
+              <div class="grid-4 log-filters">
+                <div class="input-group">
+                  <label for="manualFilterLevel">任务状态</label>
+                  <select id="manualFilterLevel">
+                    <option value="all">全部</option>
+                    <option value="info">运行中</option>
+                    <option value="success">已完成</option>
+                    <option value="error">失败</option>
+                  </select>
+                </div>
+                <div class="input-group">
+                  <label for="manualFilterTimeRange">时间范围</label>
+                  <select id="manualFilterTimeRange">
+                    <option value="24">最近24小时</option>
+                    <option value="168">最近7天</option>
+                    <option value="720">最近30天</option>
+                    <option value="all">全部时间</option>
+                  </select>
+                </div>
+                <div class="input-group">
+                  <label>&nbsp;</label>
+                  <input type="text" id="manualFilterKeyword" placeholder="搜索" />
+                </div>
+              </div>
+
+              <div id="manualLogsList" class="logs-container"></div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- 自动化页面 -->
+      <div class="tab-content" data-content="automation">
+        <section class="config-section">
+          <div class="config-header">
+            <h2>自动化同步</h2>
+          </div>
+          <p class="muted">定时同步收藏夹，自动下载新本子到本地，跳过已有本子。</p>
+          
+          <!-- 自动化任务列表 -->
+          <div id="autoTasksList" class="auto-tasks-list"></div>
+          
+          <!-- 新建自动化任务表单 -->
+          <div id="autoFormCard" class="forward-form-card" style="display: none;">
+            <div class="form-header">
+              <h3>新建自动化任务</h3>
+              <button class="icon-close-btn" id="btnCloseAutoForm">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            
+            <form id="autoForm" class="forward-form">
+              <div class="input-group">
+                <label for="autoName">任务名称</label>
+                <input type="text" id="autoName" placeholder="例如：每日同步收藏夹" required />
+              </div>
+
+              <div class="grid-2">
+                <div class="input-group">
+                  <label for="autoUsername">禁漫账号</label>
+                  <input type="text" id="autoUsername" required />
+                </div>
+                <div class="input-group">
+                  <label for="autoPassword">禁漫密码</label>
+                  <div style="position: relative; width: 100%;">
+                    <input type="password" id="autoPassword" required style="padding-right: 40px; width: 100%;" />
+                    <button type="button" id="toggleAutoPwd" class="icon-btn" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); padding: 4px 6px; border: none; background: transparent; cursor: pointer; color: #64748b; transition: color 0.2s; display: flex; align-items: center; justify-content: center;" title="显示/隐藏密码">
+                      <svg id="toggleAutoPwdIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="input-group">
+                <label for="autoCron">同步间隔 (Cron 表达式)</label>
+                <input type="text" id="autoCron" placeholder="0 */6 * * *" required />
+                <small class="input-hint">
+                  示例：0 */6 * * * (每6小时) | 0 2 * * * (每天凌晨2点) | 0 0 * * 0 (每周日凌晨)
+                  <a href="https://crontab.guru/" target="_blank" style="color: #1e90ff;">Cron 表达式生成器</a>
+                </small>
+              </div>
+              
+              <div class="grid-2">
+                <div class="input-group">
+                  <label for="autoDownloadDir">下载目录</label>
+                  <input type="text" id="autoDownloadDir" value="./download/" />
+                </div>
+                <div class="input-group">
+                  <label for="autoDownloadSpeed">下载速度限制 <span class="optional">(可选)</span></label>
+                  <input type="text" id="autoDownloadSpeed" placeholder="例如: 10mb 或 1024kb" />
+                  <small class="input-hint">支持 mb/kb 单位，如 10mb、512kb</small>
+                </div>
+              </div>
+
+              <div class="grid-2">
+                <div class="input-group">
+                  <label for="autoDirRule">目录层级规则</label>
+                  <input type="text" id="autoDirRule" value="Aauthoroname/Pindextitle" />
+                  <small class="input-hint">用 / 分隔目录层级。常用字段: Aauthoroname([作者]标题), Pindextitle(第X話 标题), Aid(本子ID), Atitle(标题)</small>
+                </div>
+              </div>
+
+              <div class="grid-2">
+                <div class="input-group">
+                  <label for="autoBatchAlbumsCount">每批下载数量</label>
+                  <input type="number" id="autoBatchAlbumsCount" value="50" min="1" max="500" />
+                  <small class="input-hint">每批下载多少个本子，建议 30-100</small>
+                </div>
+                <div class="input-group">
+                  <label for="autoBatchIntervalMinutes">批次间隔（分钟）</label>
+                  <input type="number" id="autoBatchIntervalMinutes" value="30" min="1" max="1440" />
+                  <small class="input-hint">每批下载完成后等待时间，建议 20-60</small>
+                </div>
+              </div>
+
+              <div class="grid-2">
+                <div class="input-group">
+                  <label for="autoClientImpl">客户端类型</label>
+                  <select id="autoClientImpl">
+                    <option value="api">API (推荐)</option>
+                    <option value="html">HTML</option>
+                  </select>
+                </div>
+                <div class="input-group">
+                  <label for="autoImageSuffix">图片格式</label>
+                  <select id="autoImageSuffix">
+                    <option value="">不转换</option>
+                    <option value=".jpg">JPG</option>
+                    <option value=".png">PNG</option>
+                    <option value=".webp">WebP</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- 压缩配置 -->
+              <div class="input-group">
+                <label>
+                  <input type="checkbox" id="autoEnableCompression" />
+                  下载完成后自动压缩
+                </label>
+              </div>
+
+              <div id="autoCompressionConfig" style="display: none; padding: 16px; background: #f8fafc; border-radius: 8px; margin-top: 8px;">
+                <div class="grid-2">
+                  <div class="input-group">
+                    <label for="autoCompressionFormat">压缩格式</label>
+                    <select id="autoCompressionFormat">
+                      <option value="zip">ZIP</option>
+                      <option value="7z">7z</option>
+                    </select>
+                  </div>
+                  
+                  <div class="input-group">
+                    <label for="autoCompressionLevel">压缩级别</label>
+                    <select id="autoCompressionLevel">
+                      <option value="album">整本压缩</option>
+                      <option value="photo">分章压缩</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div class="grid-2" style="margin-top: 16px;">
+                  <div class="input-group">
+                    <label for="autoCompressionPassword">压缩密码 <span class="optional">(可选)</span></label>
+                    <input type="password" id="autoCompressionPassword" placeholder="留空表示不加密" />
+                  </div>
+                  
+                  <div class="input-group" style="margin-top: 28px;">
+                    <label>
+                      <input type="checkbox" id="autoDeleteAfterCompress" />
+                      压缩后删除原文件
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- PDF 生成配置 -->
+              <div class="input-group">
+                <label>
+                  <input type="checkbox" id="autoEnablePdf" />
+                  下载完成后自动生成PDF
+                </label>
+              </div>
+
+              <div id="autoPdfConfig" style="display: none; padding: 16px; background: #f8fafc; border-radius: 8px; margin-top: 8px;">
+                <div class="grid-2">
+                  <div class="input-group">
+                    <label for="autoPdfLevel">PDF级别</label>
+                    <select id="autoPdfLevel">
+                      <option value="album">整本PDF</option>
+                      <option value="photo">分章PDF</option>
+                    </select>
+                  </div>
+                  
+                  <div class="input-group">
+                    <label for="autoPdfPassword">PDF密码 <span class="optional">(可选)</span></label>
+                    <input type="password" id="autoPdfPassword" placeholder="留空表示不加密" />
+                  </div>
+                </div>
+                
+                <div class="input-group" style="margin-top: 16px;">
+                  <label>
+                    <input type="checkbox" id="autoDeleteAfterPdf" />
+                    生成PDF后删除原图片
+                  </label>
+                </div>
+              </div>
+
+              <div class="input-group">
+                <label>
+                  <input type="checkbox" id="autoRunNow" checked />
+                  立即启动
+                </label>
+              </div>
+
+              <div class="btn-group">
+                <button type="submit" class="btn btn-primary">创建任务</button>
+                <button type="button" class="btn" id="btnCancelAutoForm">取消</button>
+              </div>
+            </form>
+          </div>
+          
+          <div class="config-header" style="margin-top: 24px;">
+            <button class="btn btn-primary btn-sm" id="btnCreateAutoTask">创建自动化任务</button>
+          </div>
+        </section>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- 加载提示 -->
+  <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+    <div class="loading-spinner"></div>
+    <p>处理中...</p>
+  </div>
+
+  <!-- 消息提示框 -->
+  <div id="messageModal" class="message-modal">
+    <div class="message-modal-content">
+      <div class="message-modal-icon"></div>
+      <div class="message-modal-text"></div>
+      <div class="message-modal-actions">
+        <button class="message-modal-btn message-modal-btn-confirm">确定</button>
+        <button class="message-modal-btn message-modal-btn-cancel" style="display: none;">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 执行记录详情模态框 -->
+  <div id="executionDetailModal" class="execution-modal" style="display: none;">
+    <div class="execution-modal-overlay"></div>
+    <div class="execution-modal-content">
+      <div class="execution-modal-header">
+        <h3 id="executionModalTitle">执行详情</h3>
+        <button class="execution-modal-close" id="closeExecutionModal">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="execution-modal-body">
+        <div class="execution-modal-stats" id="executionModalStats"></div>
+        <div class="execution-modal-section">
+          <h4>执行日志</h4>
+          <div class="execution-modal-logs" id="executionModalLogs"></div>
+        </div>
+        <div class="execution-modal-section" id="executionModalTasksSection" style="display: none;">
+          <h4>关联下载任务</h4>
+          <div class="execution-modal-tasks" id="executionModalTasks"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/static/js/bootstrap.js"></script>
+</body>
+</html>
+

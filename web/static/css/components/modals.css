@@ -1,0 +1,342 @@
+/* 消息提示框 */
+.message-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: fadeIn 0.2s ease;
+}
+
+.message-modal.show {
+  display: flex;
+}
+
+.message-modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 32px;
+  min-width: 400px;
+  max-width: 500px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideDown 0.3s ease;
+  text-align: center;
+}
+
+.message-modal-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  line-height: 1;
+}
+
+.message-modal.success .message-modal-icon::before {
+  content: '✓';
+  color: #10b981;
+}
+
+.message-modal.error .message-modal-icon::before {
+  content: '✕';
+  color: #ef4444;
+}
+
+.message-modal.warning .message-modal-icon::before {
+  content: '⚠';
+  color: #f59e0b;
+}
+
+.message-modal.info .message-modal-icon::before {
+  content: 'ℹ';
+  color: #3b82f6;
+}
+
+.message-modal-text {
+  font-size: 16px;
+  color: #374151;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  white-space: pre-wrap;
+}
+
+.message-modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.message-modal-btn {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 80px;
+}
+
+.message-modal-btn-confirm {
+  background: linear-gradient(135deg, #1e90ff 0%, #3b9fff 100%);
+  color: white;
+}
+
+.message-modal-btn-confirm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(30, 144, 255, 0.3);
+}
+
+.message-modal-btn-cancel {
+  background: #e5e7eb;
+  color: #6b7280;
+}
+
+.message-modal-btn-cancel:hover {
+  background: #d1d5db;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* 执行详情模态框 */
+.execution-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.execution-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.execution-modal-content {
+  position: relative;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 900px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  z-index: 10001;
+}
+
+.execution-modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.execution-modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.execution-modal-close {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: #9ca3af;
+  transition: color 0.2s;
+  border-radius: 4px;
+}
+
+.execution-modal-close:hover {
+  color: #1f2937;
+  background: #f3f4f6;
+}
+
+.execution-modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.execution-modal-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.execution-modal-stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.execution-modal-stat-label {
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.execution-modal-stat-value {
+  font-size: 16px;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.execution-modal-section {
+  margin-bottom: 24px;
+}
+
+.execution-modal-section h4 {
+  margin: 0 0 12px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.execution-modal-logs {
+  background: #1f2937;
+  border-radius: 8px;
+  padding: 16px;
+  max-height: 400px;
+  overflow-y: auto;
+  font-family: ui-monospace, monospace;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.execution-modal-log-section-title {
+  color: #60a5fa;
+  font-weight: 600;
+  font-size: 14px;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #374151;
+}
+
+.execution-modal-log-section-title:first-child {
+  margin-top: 0;
+}
+
+.execution-modal-log-line {
+  color: #e5e7eb;
+  margin-bottom: 4px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.execution-modal-tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.execution-modal-task-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+}
+
+.execution-modal-task-item.has-failures {
+  border-color: #fbbf24;
+  background: #fffbeb;
+}
+
+.execution-modal-task-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.execution-modal-task-id {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.execution-modal-task-failed {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 8px;
+  margin-top: 4px;
+  border-top: 1px dashed #fbbf24;
+}
+
+.execution-modal-task-failed .failed-count {
+  font-size: 12px;
+  color: #d97706;
+  font-weight: 500;
+}
+
+.execution-modal-task-status {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.execution-modal-task-status.running {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.execution-modal-task-status.completed {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.execution-modal-task-status.failed {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.execution-modal-task-status.pending {
+  background: #e5e7eb;
+  color: #4b5563;
+}
+
+.execution-modal-task-info {
+  color: #6b7280;
+  margin-left: auto;
+}
+
