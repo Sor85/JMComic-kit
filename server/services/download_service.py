@@ -289,14 +289,14 @@ def run_download_task(task: DownloadTask) -> None:
             task["error"] = str(e)
             add_log(task_id, "error", f"下载失败: {str(e)}")
             traceback.print_exc()
-            
-                    # 持久化手动任务和日志
-                    if not task.get('auto_task_id'):
-                        from server.utils.storage import save_manual_tasks
-                        from server.utils.logs import save_logs
-                        from server.state import tasks as all_tasks
-                        save_manual_tasks(all_tasks)
-                        save_logs()  # 保存日志
+
+            # 持久化手动任务和日志
+            if not task.get('auto_task_id'):
+                from server.utils.storage import save_manual_tasks
+                from server.utils.logs import save_logs
+                from server.state import tasks as all_tasks
+                save_manual_tasks(all_tasks)
+                save_logs()  # 保存日志
         
         task["end_time"] = datetime.now().isoformat()
 

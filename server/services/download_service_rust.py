@@ -32,6 +32,7 @@ def sanitize_path(path: str, max_bytes: int = 200) -> str:
     
     # 规范化路径分隔符
     path = path.replace('\\', '/')
+    had_leading_slash = path.startswith('/')
     
     # 分离驱动器和路径（Windows 绝对路径如 C:/）
     drive = ''
@@ -40,7 +41,7 @@ def sanitize_path(path: str, max_bytes: int = 200) -> str:
     if is_windows and len(path) >= 2 and path[1] == ':' and path[0].isalpha():
         drive = path[:2]
         rest = path[2:].lstrip('/')
-    elif path.startswith('/'):
+    elif had_leading_slash:
         rest = path.lstrip('/')
     
     # 分割路径
@@ -105,10 +106,14 @@ def sanitize_path(path: str, max_bytes: int = 200) -> str:
         cleaned_parts.append(cleaned)
     
     # 重新组合路径
+    joined = '/'.join(cleaned_parts)
+
     if drive:
-        result = drive + '/' + '/'.join(cleaned_parts)
+        result = drive + '/' + joined if joined else drive + '/'
+    elif had_leading_slash:
+        result = '/' + joined if joined else '/'
     else:
-        result = '/'.join(cleaned_parts)
+        result = joined
     
     # 转换回系统对应的路径分隔符
     return result.replace('/', os.sep)
