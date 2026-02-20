@@ -16,7 +16,7 @@ from server.state import tasks, auto_tasks, auto_executions, init_task_counter, 
 from server.utils.storage import load_auto_tasks as storage_load_auto_tasks, load_auto_executions as storage_load_auto_executions, load_manual_tasks as storage_load_manual_tasks
 from server.utils.logs import add_log, load_logs, logs
 from server.routes import register_blueprints
-from server.routes.automation_routes import schedule_auto_task
+from server.routes.automation_routes import recover_scheduled_auto_tasks
 
 app = Flask(__name__, 
             static_folder='web/static',
@@ -101,6 +101,14 @@ def shutdown_scheduler():
 # 注册所有路由 Blueprint
 register_blueprints(app, scheduler)
 
+# 启动时恢复调度（仅对启用中的任务）
+try:
+    recovered_count = recover_scheduled_auto_tasks()
+    if recovered_count > 0:
+        add_log(0, 'info', f'已恢复 {recovered_count} 个自动化任务调度')
+except Exception as e:
+    add_log(0, 'error', f'恢复自动化任务调度失败: {str(e)}')
+
 
 @app.route('/')
 def index():
@@ -133,14 +141,7 @@ if __name__ == '__main__':
     print()
 
     # 关闭 debug 模式和 reloader，加快启动速度
-    # 启动时恢复调度（仅对运行中的任务）
-    try:
-        for tid, t in auto_tasks.items():
-            if t.get('status') == 'running':
-                schedule_auto_task(tid)
-    except Exception as e:
-        add_log(0, 'error', f'恢复自动化任务调度失败: {str(e)}')
-    
+
     # 默认监听本地，可通过 WEB_SERVER_HOST=0.0.0.0 放开访问（注意安全）
     app.run(host=host, port=port, debug=False, threaded=True)
 

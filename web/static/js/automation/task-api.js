@@ -1,9 +1,9 @@
 /**
  * 自动化任务 API 调用封装
- * 
+ *
  * 提供与后端交互的所有 API 函数
  */
-import { API_BASE } from '../config.js';
+import { API_BASE } from "../config.js";
 
 /**
  * 获取所有自动化任务
@@ -14,13 +14,10 @@ export async function fetchAllTasks() {
 }
 
 /**
- * 获取单个任务详情（包含敏感信息）
+ * 获取单个任务详情
  */
-export async function fetchTaskDetail(taskId, includeSensitive = false) {
-  const url = includeSensitive 
-    ? `${API_BASE}/api/automation/${taskId}?include_sensitive=1`
-    : `${API_BASE}/api/automation/${taskId}`;
-  const response = await fetch(url);
+export async function fetchTaskDetail(taskId) {
+  const response = await fetch(`${API_BASE}/api/automation/${taskId}`);
   return await response.json();
 }
 
@@ -29,9 +26,9 @@ export async function fetchTaskDetail(taskId, includeSensitive = false) {
  */
 export async function createTask(taskData) {
   const response = await fetch(`${API_BASE}/api/automation`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(taskData)
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(taskData),
   });
   return await response.json();
 }
@@ -41,9 +38,9 @@ export async function createTask(taskData) {
  */
 export async function updateTask(taskId, taskData) {
   const response = await fetch(`${API_BASE}/api/automation/${taskId}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(taskData)
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(taskData),
   });
   return await response.json();
 }
@@ -53,7 +50,7 @@ export async function updateTask(taskId, taskData) {
  */
 export async function deleteTask(taskId) {
   const response = await fetch(`${API_BASE}/api/automation/${taskId}`, {
-    method: 'DELETE'
+    method: "DELETE",
   });
   return await response.json();
 }
@@ -63,7 +60,7 @@ export async function deleteTask(taskId) {
  */
 export async function startTask(taskId) {
   const response = await fetch(`${API_BASE}/api/automation/${taskId}/start`, {
-    method: 'POST'
+    method: "POST",
   });
   return await response.json();
 }
@@ -73,7 +70,7 @@ export async function startTask(taskId) {
  */
 export async function stopTask(taskId) {
   const response = await fetch(`${API_BASE}/api/automation/${taskId}/stop`, {
-    method: 'POST'
+    method: "POST",
   });
   return await response.json();
 }
@@ -83,7 +80,7 @@ export async function stopTask(taskId) {
  */
 export async function runTaskNow(taskId) {
   const response = await fetch(`${API_BASE}/api/automation/${taskId}/run`, {
-    method: 'POST'
+    method: "POST",
   });
   return await response.json();
 }
@@ -92,7 +89,9 @@ export async function runTaskNow(taskId) {
  * 获取任务执行历史
  */
 export async function fetchTaskExecutions(taskId, limit = 5) {
-  const response = await fetch(`${API_BASE}/api/automation/${taskId}/executions?limit=${limit}`);
+  const response = await fetch(
+    `${API_BASE}/api/automation/${taskId}/executions?limit=${limit}`,
+  );
   return await response.json();
 }
 
@@ -100,7 +99,9 @@ export async function fetchTaskExecutions(taskId, limit = 5) {
  * 获取执行详情（包含关联任务）
  */
 export async function fetchExecutionDetail(executionId) {
-  const response = await fetch(`${API_BASE}/api/automation/execution/${executionId}`);
+  const response = await fetch(
+    `${API_BASE}/api/automation/execution/${executionId}`,
+  );
   return await response.json();
 }
 
@@ -108,7 +109,9 @@ export async function fetchExecutionDetail(executionId) {
  * 获取执行日志
  */
 export async function fetchExecutionLogs(executionId, limit = 500) {
-  const response = await fetch(`${API_BASE}/api/automation/execution/${executionId}/logs?limit=${limit}`);
+  const response = await fetch(
+    `${API_BASE}/api/automation/execution/${executionId}/logs?limit=${limit}`,
+  );
   return await response.json();
 }
 
@@ -125,7 +128,7 @@ export async function fetchTaskLogs(taskId) {
  */
 export async function retryTaskFailedImages(taskId) {
   const response = await fetch(`${API_BASE}/api/tasks/${taskId}/retry`, {
-    method: 'POST'
+    method: "POST",
   });
   return await response.json();
 }
@@ -134,9 +137,11 @@ export async function retryTaskFailedImages(taskId) {
  * 删除执行记录
  */
 export async function deleteExecution(executionId) {
-  const response = await fetch(`${API_BASE}/api/automation/execution/${executionId}`, {
-    method: 'DELETE'
-  });
+  const response = await fetch(
+    `${API_BASE}/api/automation/execution/${executionId}`,
+    {
+      method: "DELETE",
+    },
+  );
   return await response.json();
 }
-

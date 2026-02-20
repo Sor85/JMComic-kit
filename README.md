@@ -95,6 +95,32 @@ pip install -r requirements-web.txt
 python web_server.py
 ```
 
+#### 可选：日志容量运行参数（环境变量）
+
+日志系统支持通过环境变量调优，不修改接口行为，仅影响日志保留与压缩策略。
+
+| 变量名 | 默认值 | 作用 |
+|------|------|------|
+| `MAX_LOGS_PER_TASK` | `200` | 每个任务最多保留多少条日志 |
+| `MAX_LOGS_ON_DISK` | `20000` | 磁盘总日志最大保留条数 |
+| `WAL_COMPACT_BATCH_SIZE` | `100` | 写入多少条增量日志后触发一次压缩合并 |
+
+示例（macOS/Linux）：
+
+```bash
+export MAX_LOGS_PER_TASK=300
+export MAX_LOGS_ON_DISK=50000
+export WAL_COMPACT_BATCH_SIZE=200
+python web_server.py
+```
+
+建议：
+- 磁盘空间紧张：减小 `MAX_LOGS_ON_DISK`
+- 需要更长排障历史：增大 `MAX_LOGS_PER_TASK`
+- 写入频率很高：适当增大 `WAL_COMPACT_BATCH_SIZE`
+
+以上变量在服务启动时读取，修改后需重启服务生效。
+
 #### 第 3 步：访问界面
 
 打开浏览器访问：http://localhost:5000

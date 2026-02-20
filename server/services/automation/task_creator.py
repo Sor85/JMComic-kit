@@ -8,7 +8,7 @@
 import threading
 from datetime import datetime
 from typing import Any, Dict, List
-from server.state import tasks, get_next_task_id
+from server.state import tasks, task_lock, get_next_task_id
 from server.utils import add_log
 
 
@@ -92,7 +92,8 @@ def _create_single_download_task(
         'auto_execution_id': execution_id
     }
     
-    tasks[task_id] = task
+    with task_lock:
+        tasks[task_id] = task
     
     # 记录日志
     if batch_info:
@@ -132,15 +133,16 @@ def _run_download_task(task_id: int, album_ids: List[str], config: Dict[str, Any
     """
     from server.services.download_service_rust import run_download_task_rust
     
-    task = tasks.get(task_id)
-    if not task:
-        return
-    
-    task.update({
-        'album_ids': album_ids,
-        'photo_ids': [],
-        'config': config,
-    })
+    with task_lock:
+        task = tasks.get(task_id)
+        if not task:
+            return
+
+        task.update({
+            'album_ids': album_ids,
+            'photo_ids': [],
+            'config': config,
+        })
     
     run_download_task_rust(task)
 

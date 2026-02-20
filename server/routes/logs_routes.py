@@ -5,8 +5,10 @@
 处理日志查询、清空和实时日志获取
 """
 
+from html import escape
+
 from flask import Blueprint, request, jsonify
-from server.utils.logs import get_logs as get_logs_safe, clear_logs as clear_logs_safe, logs
+from server.utils.logs import get_logs as get_logs_safe, clear_logs as clear_logs_safe
 
 logs_bp = Blueprint('logs', __name__)
 
@@ -25,19 +27,21 @@ def get_logs():
 @logs_bp.route('/realtime_logs/<int:task_id>', methods=['GET'])
 def get_realtime_logs(task_id):
     """获取任务的实时日志（格式化为文本数组）"""
-    task_logs = [log for log in logs if log['task_id'] == task_id]
-    
-    # 格式化为文本数组
+    task_logs = get_logs_safe(task_id=task_id, level='all', limit=1000)
+
     formatted_logs = []
-    for log in reversed(task_logs):  # 按时间正序
-        timestamp = log['timestamp'][:19].replace('T', ' ')  # 格式化时间
+    for log in reversed(task_logs):
+        timestamp_raw = str(log.get('timestamp', ''))
+        timestamp = timestamp_raw[:19].replace('T', ' ') if timestamp_raw else 'unknown'
+        level = str(log.get('level', 'info'))
         level_emoji = {
             'info': 'ℹ️',
             'success': '✅',
             'error': '❌'
-        }.get(log['level'], '•')
-        formatted_logs.append(f"[{timestamp}] {level_emoji} {log['message']}")
-    
+        }.get(level, '•')
+        message = escape(str(log.get('message', '')))
+        formatted_logs.append(f"[{timestamp}] {level_emoji} {message}")
+
     return jsonify(formatted_logs)
 
 
